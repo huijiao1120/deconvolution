@@ -24,7 +24,7 @@ def parse_opts():
     parser.add_argument('--msg', default=False, type=distutils.util.strtobool, help='display message')
     parser.add_argument('--resume', default='', type=str, metavar='PATH',
                         help='path to latest checkpoint (default: none)')
-    parser.add_argument('--use-gpu', default=torch.cuda.is_available(), type=distutils.util.strtobool, help='Use GPU or not')
+    parser.add_argument('--use-gpu', default=False, type=distutils.util.strtobool, help='Use GPU or not') #default = torch.cuda.is_available()
 
     parser.add_argument('-j','--num-workers', default=8, type=int, help='num of fetching threads')
     parser.add_argument('--result-path', default='./results', help='result path')
@@ -56,7 +56,6 @@ def parse_opts():
     parser.add_argument('--init', default='kaiming_1', help='initialization method (casnet|xavier|kaiming_1||kaiming_2)')
 
     parser.add_argument('--dropout-rate', default=0.0, type=float, help='dropout rate')
-    parser.add_argument('--stride', default=1, type=int, help='stride size in fractal convolution')
 
     parser.add_argument('--save-plot', default=True, type=distutils.util.strtobool,  help='save plots with matplotlib')
 
@@ -74,6 +73,7 @@ def parse_opts():
     parser.add_argument('--eps', default=1e-2,type=float, help='for regularization')
     parser.add_argument('--bias', default=True,type=distutils.util.strtobool, help='use bias term in deconv')
     parser.add_argument('--num-groups-final', default=512, type=int, help='number of groups in final deconv')
+    parser.add_argument('--stride', default=3, type=int, help='sampling stride in deconv')
 
     args = parser.parse_args()
 

@@ -83,7 +83,7 @@ def train_net(net,opts):
 
     optimizer=opts.current_optimizer
 
-    end_time = time.time()
+    end_time = time.time_ns()
 
     for batch_idx, (inputs, targets) in enumerate(opts.data_loader):
         #ff
@@ -154,8 +154,8 @@ def train_net(net,opts):
 
         optimizer.zero_grad()  # flush
 
-        total_time += (time.time() - end_time)
-        end_time = time.time()
+        total_time += (time.time_ns() - end_time) / (10 ** 9)
+        end_time = time.time_ns()
 
 
         if opts.msg:
@@ -218,7 +218,7 @@ def eval_net(net,opts):
 
 
 
-    end_time = time.time()
+    end_time = time.time_ns()
     for batch_idx, (inputs, targets) in enumerate(opts.data_loader):
 
         with torch.no_grad():
@@ -243,8 +243,13 @@ def eval_net(net,opts):
             top1.update(prec1[0].item(), inputs.size(0))
             top5.update(prec5[0].item(), inputs.size(0))
 
-            total_time += (time.time() - end_time)
-            end_time = time.time()
+            current_time = (time.time_ns() - end_time) / (10 ** 9)
+            print('elasped time for current batch: %6.3f seconds.'
+                    % (current_time))
+
+            total_time += current_time
+            
+            end_time = time.time_ns()
 
             if opts.msg:
                 print('Loss: %.3f | top1: %.3f%% ,top5: %.3f%%'
@@ -312,7 +317,7 @@ def eval_net(net,opts):
         shutil.copyfile(save_file_path, os.path.join(opts.checkpoint_path,'model_best.pth.tar'))
 
 
-    print('Loss: %.3f | top1: %.3f%%, top5: %.3f%%, elasped time: %3.f seconds. Best Acc: %.3f%%'
+    print('Loss: %.3f | top1: %.3f%%, top5: %.3f%%, elasped time: %6.3f seconds. Best Acc: %.3f%%'
           % (losses.avg , top1.avg, top5.avg, total_time, opts.best_acc))
 
 
